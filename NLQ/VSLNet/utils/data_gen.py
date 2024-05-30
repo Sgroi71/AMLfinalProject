@@ -291,7 +291,10 @@ def gen_or_load_dataset(configs):
     if not os.path.exists(configs.save_dir):
         os.makedirs(configs.save_dir)
     data_dir = os.path.join("data", "dataset", configs.task)
-    feature_dir = os.path.join("data", "features", configs.task, configs.fv)
+    if configs.fv == "egovlp":
+        feature_dir = "/content/ego4d_data/v1/egovlp_fp16/storage/ego4d/v2/egovlp_fp16"
+    else:
+        feature_dir = os.path.join("data", "features", configs.task, configs.fv)
     if configs.suffix is None:
         save_path = os.path.join(
             configs.save_dir,
