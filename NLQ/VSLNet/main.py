@@ -251,6 +251,7 @@ def main(configs, parser):
             device=device,
             mode="test",
             result_save_path=result_save_path,
+            gt_json_path=configs.eval_gt_json,
         )
         print(score_str, flush=True)
 
