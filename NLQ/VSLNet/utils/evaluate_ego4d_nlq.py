@@ -61,11 +61,13 @@ def evaluate_nlq_performance(
 ):
     """Evalutes the performances."""
     gt_dict = {}
+    clip_dict = {}
     num_gt_queries = 0
 
     for video_datum in ground_truth["videos"]:
         for clip_datum in video_datum["clips"]:
             clip_uid = clip_datum["clip_uid"]
+            clip_dict[clip_uid] = clip_datum
             for ann_datum in clip_datum["annotations"]:
                 key = (clip_uid, ann_datum["annotation_uid"])
                 gt_dict[key] = ann_datum
@@ -79,12 +81,10 @@ def evaluate_nlq_performance(
         assert key in gt_dict, "Instance not present!"
         query_id = pred_datum["query_idx"]
         gt_datum = gt_dict[key]
-        gt_query_datum = gt_datum["language_queries"][query_id]
-
-        # Compute overlap and recalls.
+        clip = clip_dict[clip_uid]
         overlap = compute_IoU(
             pred_datum["predicted_times"],
-            [[gt_query_datum["clip_start_sec"], gt_query_datum["clip_end_sec"]]],
+            [[clip["clip_start_sec"], clip["clip_end_sec"]]],
         )
         average_IoU.append(np.mean(np.sort(overlap[0])[-3:]))
         for tt, threshold in enumerate(thresholds):
