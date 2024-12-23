@@ -245,7 +245,7 @@ def main(configs, parser):
         model.load_state_dict(torch.load(filename))
         model.eval()
         result_save_path = filename.replace(".t7", "_test_result.json")
-        results, mIoU, score_str = eval_test(
+        results, mIoU, (score_str, score_dict) = eval_test(
             model=model,
             data_loader=test_loader,
             device=device,
