@@ -364,6 +364,9 @@ def gen_or_load_dataset(configs):
         )
     else:
         word_dict, char_dict, vectors = vocab_emb_gen(data_list, emb_path)
+        print(f"Word dictionary size: {len(word_dict)}")
+        print(f"Embedding matrix shape: {vectors.shape}")
+
         train_set = dataset_gen(
             train_data,
             vfeat_lens,

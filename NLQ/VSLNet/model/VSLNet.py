@@ -130,8 +130,11 @@ class VSLNet(nn.Module):
             query_features = self.embedding_net(word_ids)
             query_features = self.query_affine(query_features)
         elif self.configs.predictor == "glove":
+            print(f"word_ids shape before embedding: {word_ids.shape}")
             query_features = self.embedding_net(word_ids)
+            print(f"query_features shape after embedding: {query_features.shape}")
             query_features = self.lstm_encoder(query_features)
+            print(f"query_features shape after LSTM: {query_features.shape}")
         else:
             query_features = self.embedding_net(word_ids, char_ids)
 
