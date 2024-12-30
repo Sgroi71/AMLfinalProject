@@ -332,7 +332,7 @@ def gen_or_load_dataset(configs):
         else [train_data, val_data, test_data]
     )
     if configs.predictor == "bert":
-        from transformers import BertTokenizer, BertForPreTraining
+        from transformers import BertTokenizer
 
         tokenizer = BertTokenizer.from_pretrained("bert-base-uncased")
         train_set = dataset_gen_bert(
@@ -362,15 +362,6 @@ def gen_or_load_dataset(configs):
             "test",
             num_workers=configs.num_workers,
         )
-        n_val = 0 if val_set is None else len(val_set)
-        dataset = {
-            "train_set": train_set,
-            "val_set": val_set,
-            "test_set": test_set,
-            "n_train": len(train_set),
-            "n_val": n_val,
-            "n_test": len(test_set),
-        }
     else:
         word_dict, char_dict, vectors = vocab_emb_gen(data_list, emb_path)
         train_set = dataset_gen(
@@ -403,8 +394,6 @@ def gen_or_load_dataset(configs):
             "test",
             num_workers=configs.num_workers,
         )
-        # save dataset
-        n_val = 0 if val_set is None else len(val_set)
         dataset = {
             "train_set": train_set,
             "val_set": val_set,
@@ -413,7 +402,7 @@ def gen_or_load_dataset(configs):
             "char_dict": char_dict,
             "word_vector": vectors,
             "n_train": len(train_set),
-            "n_val": n_val,
+            "n_val": 0 if val_set is None else len(val_set),
             "n_test": len(test_set),
             "n_words": len(word_dict),
             "n_chars": len(char_dict),

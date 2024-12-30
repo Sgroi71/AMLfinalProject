@@ -13,6 +13,7 @@ from model.layers import (
     ConditionedPredictor,
     HighLightLayer,
     BertEmbedding,
+    LSTMEncoder,
 )
 
 
@@ -87,6 +88,14 @@ class VSLNet(nn.Module):
             # init parameters
             self.init_parameters()
             self.embedding_net = BertEmbedding(configs.text_agnostic)
+        elif configs.predictor == "glove":
+            # Load GloVe embedding layer
+            self.embedding_net = nn.Embedding.from_pretrained(
+                torch.tensor(word_vectors, dtype=torch.float32), freeze=True
+            )
+            # Add an LSTM to process GloVe embeddings
+            self.lstm_encoder = LSTMEncoder(input_dim=configs.word_dim, hidden_dim=configs.dim)
+
         else:
             self.embedding_net = Embedding(
                 num_words=configs.word_size,
@@ -120,6 +129,9 @@ class VSLNet(nn.Module):
         if self.configs.predictor == "bert":
             query_features = self.embedding_net(word_ids)
             query_features = self.query_affine(query_features)
+        elif self.configs.predictor == "glove":
+            query_features = self.embedding_net(word_ids)
+            query_features = self.lstm_encoder(query_features)
         else:
             query_features = self.embedding_net(word_ids, char_ids)
 
