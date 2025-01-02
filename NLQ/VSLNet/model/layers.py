@@ -176,8 +176,8 @@ class LSTMEncoder(nn.Module):
         )
 
     def forward(self, x):
-        outputs, (hidden, _) = self.lstm(x)
-        return hidden[-1]  # Return the last hidden state
+        outputs, _ = self.lstm(x)
+        return outputs  # Return the full sequence of hidden states
 
 
 class PositionalEmbedding(nn.Module):
