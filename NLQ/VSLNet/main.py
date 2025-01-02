@@ -146,9 +146,6 @@ def main(configs, parser):
                         .to(device)
                     )
                 elif configs.predictor == "glove":
-                    print(f"word_ids shape: {word_ids.shape}")
-                    print(f"query_mask shape: {query_mask.shape}")
-
                     word_ids = word_ids.to(device)
                     query_mask = (
                         (torch.zeros_like(word_ids) != word_ids).float().to(device)
