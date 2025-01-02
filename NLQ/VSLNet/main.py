@@ -23,10 +23,6 @@ from utils.runner_utils import (
 )
 
 
-import nltk
-nltk.download("punkt")
-
-
 def main(configs, parser):
     print(f"Running with {configs}", flush=True)
 
