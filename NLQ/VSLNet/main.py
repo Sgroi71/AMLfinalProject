@@ -87,6 +87,10 @@ def main(configs, parser):
         writer = SummaryWriter(log_dir=log_dir)
 
     # train and test
+    # build model
+    model = VSLNet(
+            configs=configs, word_vectors=dataset.get("word_vector", None)
+        ).to(device)
     if configs.mode.lower() == "train":
         if not os.path.exists(model_dir):
             os.makedirs(model_dir)
@@ -97,10 +101,8 @@ def main(configs, parser):
             sort_keys=True,
             save_pretty=True,
         )
-        # build model
-        model = VSLNet(
-            configs=configs, word_vectors=dataset.get("word_vector", None)
-        ).to(device)
+        
+        
         optimizer, scheduler = build_optimizer_and_scheduler(model, configs=configs)
         # start training
         best_metric = -1.0
@@ -240,10 +242,6 @@ def main(configs, parser):
         pre_configs = load_json(os.path.join(model_dir, "configs.json"))
         parser.set_defaults(**pre_configs)
         configs = parser.parse_args()
-        # build model
-        model = VSLNet(
-            configs=configs, word_vectors=dataset.get("word_vector", None)
-        ).to(device)
 
         # get last checkpoint file
         filename = get_last_checkpoint(model_dir, suffix="t7")
