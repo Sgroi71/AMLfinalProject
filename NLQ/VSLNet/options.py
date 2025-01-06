@@ -53,6 +53,8 @@ def read_command_line():
     parser.add_argument(
         "--word_dim", type=int, default=300, help="word embedding dimension"
     )
+    parser.add_argument("--narration_filename", type=str, required=True, help="Path to the filtered narrations JSON file.")
+    parser.add_argument("--output_dir", type=str, required=True, help="Path to save the generated query-answer pairs.")
     parser.add_argument(
         "--video_feature_dim",
         type=int,
