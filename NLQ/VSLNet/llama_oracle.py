@@ -51,7 +51,7 @@ if __name__ == "__main__":
     model = model.to(device)
 
     #create prompt
-    base_prompt = "Given the following narrations describing the actions of a person, generate a set of simple queries (one per line) that could be answered by looking at the video segments corresponding to these narrations:"
+    base_prompt = "Given the following narrations describing the actions of a person, generate a set of simple queries (one per line) that could be answered by looking at the video segments corresponding to these narrations Answer:"
 
     narration_filename = configs.narration_filename
     #read the json file as a dictionary
@@ -63,7 +63,10 @@ if __name__ == "__main__":
             prompt = base_prompt
             for n in narrationblock['narrations']:
                 prompt += f"\n{n[3:]}"
-            print(ask_llama(device,tokenizer,model,prompt))
+            response=ask_llama(device,tokenizer,model,prompt)
+            response = response.split("Answer:")[1]
+            print(response)
+        break
         
     
 
