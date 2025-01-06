@@ -41,6 +41,8 @@ def ask_llama(device,tokenizer, model,prompt, maxl=800, temp=0.7):
     return tokenizer.decode(outputs[0], skip_special_tokens=True).strip()
 
 if __name__ == "__main__":
+
+    login(token="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")
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
     configs, parser = options.read_command_line()
     model_id = "meta-llama/Llama-3.2-3B"
