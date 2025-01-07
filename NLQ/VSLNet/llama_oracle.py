@@ -48,7 +48,7 @@ def ask_llama(device,tokenizer, model,prompt, maxl=4000, temp=0.7):
     # Generate the output
     outputs = model.generate(
         inputs['input_ids'],  # Tokenized input
-        #max_length=maxl,         # Limit response length to avoid extra text
+        max_length=maxl,         # Limit response length to avoid extra text
         temperature=temp,        # Lower temperature to reduce randomness
         do_sample=True,        # Disable sampling for deterministic output
         pad_token_id=tokenizer.eos_token_id  # Ensure the model doesn't go beyond the end token
