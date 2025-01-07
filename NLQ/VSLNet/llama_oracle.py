@@ -27,7 +27,7 @@ def process_responses(response):
     return processed_lines
 
 #we define a method to ask any prompt to llama
-def ask_llama(device,tokenizer, model,prompt, maxl=4000, temp=0.7):
+def ask_llama(device,tokenizer, model,prompt, maxl=1500, temp=0.7):
     """
     Send a prompt to the Llama model and get a response.
 
@@ -77,7 +77,7 @@ if __name__ == "__main__":
 
     base_prompt = """
         Given the following narrations describing the actions of a person, generate a set of simple queries (one per narration) that could be answered by looking at the video segments corresponding to these narrations
-        Output the list of questions in a clear and concise manner. Do not include duplicates or irrelevant terms.
+        Output the list of questions maximum 5 line in a clear and concise manner. Do not include duplicates or irrelevant terms do not produce othe examples.
 
         **Example 1:**
         Narrations:
