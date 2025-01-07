@@ -10,7 +10,7 @@ import time
 
 
 #we define a method to ask any prompt to llama
-def ask_llama(device,tokenizer, model,prompt, maxl=2500, temp=0.7):
+def ask_llama(device,tokenizer, model,prompt, maxl=4000, temp=0.7):
     """
     Send a prompt to the Llama model and get a response.
 
@@ -124,7 +124,7 @@ if __name__ == "__main__":
             prompt += "\nAnswer:\n"
             response=ask_llama(device,tokenizer,model,prompt)
             response = response.split("Answer:")[1]
-            print(response)
+            print(f"response: {response}")
             break
         break
         
