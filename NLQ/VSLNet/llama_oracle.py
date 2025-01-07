@@ -4,7 +4,7 @@ import torch
 import options
 import json
 import time
-import tqdm
+from tqdm import tqdm
 
 # Load the tokenizer and model
 
