@@ -34,6 +34,12 @@ def read_command_line():
         help="maximal position sequence length allowed",
     )
     parser.add_argument(
+        "--temperature",
+        type=float,
+        default=0.5,
+        help="temperature of the model",
+    )
+    parser.add_argument(
         "--num_workers",
         type=int,
         default=1,
