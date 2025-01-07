@@ -8,6 +8,23 @@ import time
 # Load the tokenizer and model
 
 
+def process_responses(response):
+    # Split the response into individual lines
+    lines = response.split("\n")
+    
+    valid_end = "?"
+
+    # Process each line
+    processed_lines = []
+    for line in lines:
+        # Remove leading numbers and dots
+        line = line.lstrip("0123456789. ").strip()
+        
+        # Check if the line is in the correct format
+        if line.endswith(valid_end):
+            processed_lines.append(line)
+    
+    return processed_lines
 
 #we define a method to ask any prompt to llama
 def ask_llama(device,tokenizer, model,prompt, maxl=4000, temp=0.7):
@@ -31,7 +48,7 @@ def ask_llama(device,tokenizer, model,prompt, maxl=4000, temp=0.7):
     # Generate the output
     outputs = model.generate(
         inputs['input_ids'],  # Tokenized input
-        max_length=maxl,         # Limit response length to avoid extra text
+        #max_length=maxl,         # Limit response length to avoid extra text
         temperature=temp,        # Lower temperature to reduce randomness
         do_sample=True,        # Disable sampling for deterministic output
         pad_token_id=tokenizer.eos_token_id  # Ensure the model doesn't go beyond the end token
@@ -115,18 +132,31 @@ if __name__ == "__main__":
     #read the json file as a dictionary
     with open(narration_filename) as f:
         narrations = json.load(f)
-    
+    results = {}
     for video_uid, video in narrations.items():
+        
+        objectres=[]
         for narrationblock in video:
+            narrares=[]
+            narrationobject = {
+                "start_sec":narrationblock["start_sec"],
+                "end_sec":narrationblock["end_sec"],
+                "questions":[],
+                "answers":narrationblock['narrations'],
+            }
             prompt = base_prompt
             for n in narrationblock['narrations']:
                 prompt += f"\n{n[3:]}"
             prompt += "\nAnswer:\n"
             response=ask_llama(device,tokenizer,model,prompt)
             response = response.split("Answer:")[1]
-            print(f"response: {response}")
-            break
-        break
+            narrares.extend(process_responses(response))
+            narrationobject["questions"]=narrares
+            objectres.append(narrationobject)
+        results[video_uid]=objectres
+    with open(configs.output_dir, 'w') as f:
+        json.dump(results, f, indent=4)
+            
         
     
 
