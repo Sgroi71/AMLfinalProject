@@ -163,7 +163,7 @@ if __name__ == "__main__":
             for n in narrationblock['narrations']:
                 prompt += f"\n{n[3:]}"
             prompt += "\nAnswer:\n"
-            response=ask_llama(device,tokenizer,model,prompt,configs.max_pos_len,configs.temperature)
+            response=ask_llama(device,tokenizer,model,prompt)
             response = response.split("Answer:")[1]
             print (f"response{i}: {response}")
             i+=1
