@@ -4,6 +4,7 @@ import torch
 import options
 import json
 import time
+import tqdm
 
 # Load the tokenizer and model
 
@@ -134,7 +135,7 @@ if __name__ == "__main__":
         narrations = json.load(f)
     results = {}
     i=1
-    for video_uid, video in narrations.items():
+    for video_uid, video in tqdm(narrations.items()):
         
         objectres=[]
         for narrationblock in video:
