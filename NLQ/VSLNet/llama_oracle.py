@@ -133,6 +133,7 @@ if __name__ == "__main__":
     with open(narration_filename) as f:
         narrations = json.load(f)
     results = {}
+    i=1
     for video_uid, video in narrations.items():
         
         objectres=[]
@@ -150,6 +151,8 @@ if __name__ == "__main__":
             prompt += "\nAnswer:\n"
             response=ask_llama(device,tokenizer,model,prompt)
             response = response.split("Answer:")[1]
+            print (f"response{i}: {response}")
+            i+=1
             narrares.extend(process_responses(response))
             narrationobject["questions"]=narrares
             objectres.append(narrationobject)
