@@ -3,7 +3,7 @@ import json
 import os
 import random
 
-def format_llama_results_for_vslnet(llama_results, output_dir, split_ratios=(0.8, 0.1, 0.1)):
+def format_llama_results_for_vslnet(llama_results, output_dir, split_ratios=(0.7, 0.15, 0.15)):
     """
     Format LLaMA-generated results for VSLNet pretraining and fine-tuning.
     
@@ -42,18 +42,33 @@ def format_llama_results_for_vslnet(llama_results, output_dir, split_ratios=(0.8
                     "clip_uid": None,
                     "video_start_sec": narration_entry["start_sec"],
                     "video_end_sec": narration_entry["end_sec"],
+                    "video_start_frame": None,
+                    "video_end_frame": None,
                     "clip_start_sec": narration_entry["start_sec"],
                     "clip_end_sec": narration_entry["end_sec"],
+                    "clip_start_frame": None,
+                    "clip_end_frame": None,
                     "source_clip_uid": None,
                     "annotations": [
                         {
                             "language_queries": [
                                 {
-                                    "query": narration_entry["query"],
-                                    "start_sec": narration_entry["start_sec"],
-                                    "end_sec": narration_entry["end_sec"]
+                                    "clip_start_sec": narration_entry["start_sec"],
+                                    "clip_end_sec": narration_entry["end_sec"],
+                                    "video_start_sec": narration_entry["start_sec"],
+                                    "video_end_sec": narration_entry["end_sec"],
+                                    "video_start_frame": None,
+                                    "video_end_frame": None,
+                                    "template": None,
+                                    "query": narration,
+                                    "slot_x": None,
+                                    "verb_x": None,
+                                    "slot_y": None,
+                                    "verb_y": None
                                 }
-                            ]
+                                for narration in narration_entry["narrations"]
+                            ],
+                            "annotation_uid": None
                         }
                     ]
                 })
