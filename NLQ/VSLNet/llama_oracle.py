@@ -93,7 +93,7 @@ if __name__ == "__main__":
     base_prompt = """
         Given the following narrations describing the actions of a person, generate a set of simple queries (one per narration). Each query should be a question that can be answered based on the information provided in the corresponding narration.
         You must refer to the person doing the actions in the narrations as "C". There must be one question per narration.
-        Output the list of questions maximum 5 line in a clear and concise manner. Do not include duplicates or irrelevant terms do not produce othe examples.
+        Output the list of questions maximum 5 line in a clear and concise manner. Do not include duplicates or irrelevant terms do not produce other examples.
 
         **Example 1:**
         Narrations:
@@ -171,9 +171,11 @@ if __name__ == "__main__":
             narrares.extend(process_responses(response))
             narrationobject["questions"]=narrares
             objectres.append(narrationobject)
+            break
         results[video_uid]=objectres
-    with open(configs.output_dir, 'w') as f:
-        json.dump(results, f, indent=4)
+        break
+    #with open(configs.output_dir, 'w') as f:
+        #json.dump(results, f, indent=4)
             
         
     
