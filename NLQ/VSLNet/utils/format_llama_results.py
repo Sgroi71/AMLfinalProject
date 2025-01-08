@@ -66,7 +66,7 @@ def format_llama_results_for_vslnet(llama_results, output_dir, split_ratios=(0.7
                                     "slot_y": None,
                                     "verb_y": None
                                 }
-                                for narration in narration_entry["narrations"]
+                                for narration in narration_entry["questions"]
                             ],
                             "annotation_uid": None
                         }
@@ -99,8 +99,8 @@ def main(args):
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="Format the results for the VSLNet.")
-    parser.add_argument("llama_results_path", help="Path to LLaMA-generated results")
-    parser.add_argument("output_dir", help="Output directory for formatted JSON files")
+    parser.add_argument("--llama_results_path", help="Path to LLaMA-generated results")
+    parser.add_argument("--output_dir", help="Output directory for formatted JSON files")
 
     args = parser.parse_args()
     main(args)
