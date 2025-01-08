@@ -77,54 +77,55 @@ if __name__ == "__main__":
     #create prompt
 
     base_prompt = """
-        Given the following narrations describing the actions of a person, generate a set of simple queries (one per narration) that could be answered by looking at the video segments corresponding to these narrations
+        Given the following narrations describing the actions of a person, generate a set of simple queries (one per narration). Each query should be a question that can be answered based on the information provided in the corresponding narration.
+        You must refer to the person doing the actions in the narrations as "C". There must be one question per narration.
         Output the list of questions maximum 5 line in a clear and concise manner. Do not include duplicates or irrelevant terms do not produce othe examples.
 
         **Example 1:**
         Narrations:
-        the person cuts vegetables with a knife
-        the person places the knife on the table
-        the person takes a bowl from the cupboard
-        the person pours the vegetables into the bowl
-        the person washes their hands in the sink
+        C cuts vegetables with a knife
+        C places the knife on the table
+        C takes a bowl from the cupboard
+        C pours the vegetables into the bowl
+        C washes their hands in the sink
         Response:
-        What is the person using to cut vegetables?
-        Where does the person place the knife?
-        What does the person take from the cupboard?
+        What is C using to cut vegetables?
+        Where does C place the knife?
+        What does C take from the cupboard?
         What is being poured into the bowl?
-        Where does the person wash their hands?
+        Where does C wash their hands?
 
         ---
 
         **Example 2:**
         Narrations:
-        the person opens a book
-        the person flips through the pages
-        the person picks up a pen from the table
-        the person writes something in the book
-        the person closes the book
+        C opens a book
+        C flips through the pages
+        C picks up a pen from the table
+        C writes something in the book
+        C closes the book
         Response:
-        What does the person open at the start?
-        What is the person doing with the pages?
-        What item does the person pick up from the table?
-        What does the person use to write in the book?
-        What does the person do after writing?
+        What does C open at the start?
+        What is C doing with the pages?
+        What item does C pick up from the table?
+        What does C use to write in the book?
+        What does C do after writing?
 
         ---
 
         **Example 3:**
         Narrations:
-        the person ties their shoelaces
-        the person puts on a jacket
-        the person picks up an umbrella from the floor
-        the person opens the door
-        the person steps outside
+        C ties their shoelaces
+        C puts on a jacket
+        C picks up an umbrella from the floor
+        C opens the door
+        C steps outside
         Response:
-        What is the person tying?
-        What does the person put on after tying their shoelaces?
-        What does the person pick up from the floor?
-        What does the person open before stepping outside?
-        Where does the person go after opening the door?
+        What is C tying?
+        What does C put on after tying their shoelaces?
+        What does C pick up from the floor?
+        What does C open before stepping outside?
+        Where does C go after opening the door?
 
         ---
         Now, it's your turn! Generate a set of simple queries based on the following narrations:
