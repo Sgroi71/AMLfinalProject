@@ -171,11 +171,9 @@ if __name__ == "__main__":
             narrares.extend(process_responses(response))
             narrationobject["questions"]=narrares
             objectres.append(narrationobject)
-            break
         results[video_uid]=objectres
-        break
-    #with open(configs.output_dir, 'w') as f:
-        #json.dump(results, f, indent=4)
+    with open(configs.output_dir, 'w') as f:
+        json.dump(results, f, indent=4)
             
         
     
