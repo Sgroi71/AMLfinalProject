@@ -32,7 +32,7 @@ if __name__ == "__main__":
     # Set up argument parsing
     parser = argparse.ArgumentParser(description="Remove videos with no questions or answers from JSON data.")
     parser.add_argument(
-        "--narration_filename", 
+        "--input_dir", 
         type=str, 
         required=True, 
         help="Path to the input JSON file."
