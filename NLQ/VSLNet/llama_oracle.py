@@ -25,37 +25,51 @@ def process_responses(response):
         if line.endswith(valid_end):
             processed_lines.append(line)
     
+    # eliminate duplicates
+    processed_lines = list(set(processed_lines))
     return processed_lines
 
 #we define a method to ask any prompt to llama
-def ask_llama(device,tokenizer, model,prompt, maxl=800, temp=0.4):
+def ask_llama(
+    device, tokenizer, model, prompt,
+    max_new_tokens=80,  # or use 'max_length' if needed
+    temperature=0.4,
+    top_p=0.9,
+    top_k=50,
+    repetition_penalty=1.1
+):
     """
     Send a prompt to the Llama model and get a response.
 
     Args:
-    - configs (Namespace): The configuration options for the model.
-    - prompt (str): The input question or statement to the model.
-    - max_length (int): The maximum length of the response.
-    - temperature (float): Controls randomness in the model's output.
+        device (torch.device): The device (CPU or GPU).
+        tokenizer (AutoTokenizer): The tokenizer.
+        model (AutoModelForCausalLM): The Llama model.
+        prompt (str): The input question or statement to the model.
+        max_new_tokens (int): Maximum number of tokens to generate.
+        temperature (float): Sampling temperature.
+        top_p (float): Nucleus sampling threshold.
+        top_k (int): Top-k sampling cutoff.
+        repetition_penalty (float): Penalty for repeated phrases/tokens.
 
     Returns:
-    - str: The model's generated response.
+        str: The model's generated response.
     """
-    # Tokenize the prompt
-    inputs = tokenizer(prompt, return_tensors="pt")
-
-    inputs.to(device)
+    inputs = tokenizer(prompt, return_tensors="pt").to(device)
 
     # Generate the output
     outputs = model.generate(
-        inputs['input_ids'],  # Tokenized input
-        max_length=maxl,         # Limit response length to avoid extra text
-        temperature=temp,        # Lower temperature to reduce randomness
-        do_sample=True,        # Disable sampling for deterministic output
-        pad_token_id=tokenizer.eos_token_id  # Ensure the model doesn't go beyond the end token
+        **inputs,
+        max_new_tokens=max_new_tokens,
+        temperature=temperature,
+        do_sample=True,
+        top_p=top_p,
+        top_k=top_k,
+        repetition_penalty=repetition_penalty,
+        pad_token_id=tokenizer.eos_token_id,
+        num_return_sequences=1
     )
 
-    # Decode and return the response
     return tokenizer.decode(outputs[0], skip_special_tokens=True).strip()
 
 if __name__ == "__main__":
@@ -137,7 +151,6 @@ if __name__ == "__main__":
     results = {}
     i=1
     for video_uid, video in tqdm(narrations.items()):
-        
         objectres=[]
         for narrationblock in video:
             narrares=[]
@@ -151,7 +164,7 @@ if __name__ == "__main__":
             for n in narrationblock['narrations']:
                 prompt += f"\n{n[3:]}"
             prompt += "\nAnswer:\n"
-            response=ask_llama(device,tokenizer,model,prompt,configs.max_pos_len,configs.temperature)
+            response=ask_llama(device,tokenizer,model,prompt)
             response = response.split("Answer:")[1]
             print (f"response{i}: {response}")
             i+=1
@@ -164,4 +177,5 @@ if __name__ == "__main__":
             
         
     
+
 
