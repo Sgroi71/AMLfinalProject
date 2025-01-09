@@ -157,6 +157,11 @@ if __name__ == "__main__":
             narrationobject = {
                 "start_sec":narrationblock["start_sec"],
                 "end_sec":narrationblock["end_sec"],
+                "clip_uid":narrationblock["clip_uid"],
+                "video_start_frame": narrationblock["video_start_frame"],
+                "video_end_frame": narrationblock["video_end_frame"],
+                "clip_start_frame": narrationblock["clip_start_frame"],
+                "clip_end_frame": narrationblock["clip_end_frame"],
                 "questions":[],
                 "answers":narrationblock['narrations'],
             }
