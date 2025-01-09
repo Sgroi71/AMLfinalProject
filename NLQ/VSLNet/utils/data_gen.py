@@ -232,7 +232,6 @@ def dataset_gen_bert(data, vfeat_lens, tokenizer, max_pos_len, scope, num_worker
     def worker(
         worker_data, vfeat_lens, tokenizer, max_pos_len, scope, worker_id, output_q
     ):
-        print (f"Worker {worker_id} started")
         worker_dataset = list()
         description = f"process {scope} data [{worker_id}]"
         for record in tqdm(worker_data, total=len(worker_data), desc=description):
@@ -345,6 +344,7 @@ def gen_or_load_dataset(configs):
             "train",
             num_workers=configs.num_workers,
         )
+        print ("Train Set Loaded")
         if val_data:
             val_set = dataset_gen_bert(
                 val_data,
@@ -354,6 +354,7 @@ def gen_or_load_dataset(configs):
                 "val",
                 num_workers=configs.num_workers,
             )
+            print ("Val Set Loaded")
         else:
             val_set = None
         test_set = dataset_gen_bert(
