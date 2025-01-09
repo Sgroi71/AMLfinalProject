@@ -259,6 +259,7 @@ def dataset_gen_bert(data, vfeat_lens, tokenizer, max_pos_len, scope, num_worker
             }
             worker_dataset.append(result)
         output_q.put({worker_id: worker_dataset})
+        print(f"Worker {worker_id} finished")
 
     # Multithread version.
     output_q = multiprocessing.Queue()
@@ -331,10 +332,10 @@ def gen_or_load_dataset(configs):
         if val_data is None
         else [train_data, val_data, test_data]
     )
-    print ("Generating dataset")
+    
     if configs.predictor == "bert":
         from transformers import BertTokenizer
-
+        print ("Generating dataset")
         tokenizer = BertTokenizer.from_pretrained("bert-base-uncased")
         train_set = dataset_gen_bert(
             train_data,
