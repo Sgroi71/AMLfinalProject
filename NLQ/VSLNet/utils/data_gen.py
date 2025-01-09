@@ -331,6 +331,7 @@ def gen_or_load_dataset(configs):
         if val_data is None
         else [train_data, val_data, test_data]
     )
+    print ("Generating dataset")
     if configs.predictor == "bert":
         from transformers import BertTokenizer
 
@@ -362,6 +363,7 @@ def gen_or_load_dataset(configs):
             "test",
             num_workers=configs.num_workers,
         )
+        print ("Bert Loaded")
     else:
         word_dict, char_dict, vectors = vocab_emb_gen(data_list, emb_path)
         print(f"Word dictionary size: {len(word_dict)}")
