@@ -234,6 +234,7 @@ def dataset_gen_bert(data, vfeat_lens, tokenizer, max_pos_len, scope, num_worker
     ):
         worker_dataset = list()
         description = f"process {scope} data [{worker_id}]"
+        i=0
         for record in tqdm(worker_data, total=len(worker_data), desc=description):
             vid = record["vid"]
             if vid not in vfeat_lens:
@@ -257,6 +258,8 @@ def dataset_gen_bert(data, vfeat_lens, tokenizer, max_pos_len, scope, num_worker
                 "annotation_uid": record["annotation_uid"],
                 "query_idx": record["query_idx"],
             }
+            if i%100==0:
+                print(f"Worker {worker_id} processed {len(worker_dataset)} samples")
             worker_dataset.append(result)
         output_q.put({worker_id: worker_dataset})
         print(f"Worker {worker_id} finished")
