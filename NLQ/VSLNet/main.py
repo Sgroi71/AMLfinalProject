@@ -33,11 +33,12 @@ def main(configs, parser):
     dataset = gen_or_load_dataset(configs)
     configs.char_size = dataset.get("n_chars", -1)
     configs.word_size = dataset.get("n_words", -1)
-
+    print("Dataset loaded")
     # get train and test loader
     visual_features = load_video_features(
         os.path.join("data", "features", configs.task, configs.fv), configs.max_pos_len
     )
+    print ("Visual features loaded")
     # If video agnostic, randomize the video features.
     if configs.video_agnostic:
         visual_features = {
@@ -46,14 +47,17 @@ def main(configs, parser):
     train_loader = get_train_loader(
         dataset=dataset["train_set"], video_features=visual_features, configs=configs
     )
+    print ("Train loader created")
     val_loader = (
         None
         if dataset["val_set"] is None
         else get_test_loader(dataset["val_set"], visual_features, configs)
     )
+    print ("Val loader created")
     test_loader = get_test_loader(
         dataset=dataset["test_set"], video_features=visual_features, configs=configs
     )
+    print ("Test loader created")
     configs.num_train_steps = len(train_loader) * configs.epochs
     num_train_batches = len(train_loader)
 
