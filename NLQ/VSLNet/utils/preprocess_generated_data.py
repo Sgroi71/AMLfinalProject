@@ -47,4 +47,4 @@ if __name__ == "__main__":
     args = parser.parse_args()
 
     # Call the function with the parsed arguments
-    remove_videos_with_no_questions_or_answers(args.narration_filename, args.output_dir)
+    remove_videos_with_no_questions_or_answers(args.input_dir, args.output_dir)
