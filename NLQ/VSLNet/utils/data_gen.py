@@ -232,6 +232,7 @@ def dataset_gen_bert(data, vfeat_lens, tokenizer, max_pos_len, scope, num_worker
     def worker(
         worker_data, vfeat_lens, tokenizer, max_pos_len, scope, worker_id, output_q
     ):
+        print (f"Worker {worker_id} started for {scope} with {len(worker_data)} samples")
         worker_dataset = list()
         description = f"process {scope} data [{worker_id}]"
         i=0
