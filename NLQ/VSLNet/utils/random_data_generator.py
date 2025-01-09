@@ -70,7 +70,7 @@ def generate_random_data(filtered_narration, clips_by_video, Nvid, Nnar, NConsec
             clip_start_frame = int(round(fps * start_sec))
             clip_end_frame = int(round(fps * end_sec))
 
-            narration_texts = [n["narration_text"] for n in consecutive]
+            narration_texts = [n["narration_text"] for n in consecutive if "unsure" not in n["narration_text"] and "Unsure" not in n["narration_text"] and "UNSURE" not in n["narration_text"]]
             selected_narrations.append({
                 "start_sec": start_sec,
                 "end_sec": end_sec,
