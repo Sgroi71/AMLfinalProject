@@ -232,7 +232,7 @@ def dataset_gen_bert(data, vfeat_lens, tokenizer, max_pos_len, scope, num_worker
     def worker(
         worker_data, vfeat_lens, tokenizer, max_pos_len, scope, worker_id, output_q
     ):
-        print (f"Worker {worker_id} started for {scope} with {len(worker_data)} samples")
+        # print (f"Worker {worker_id} started for {scope} with {len(worker_data)} samples")
         worker_dataset = list()
         description = f"process {scope} data [{worker_id}]"
         i=0
@@ -259,12 +259,12 @@ def dataset_gen_bert(data, vfeat_lens, tokenizer, max_pos_len, scope, num_worker
                 "annotation_uid": record["annotation_uid"],
                 "query_idx": record["query_idx"],
             }
-            if i%20==0:
-                print(f"Worker {worker_id} processed {len(worker_dataset)} samples")
-            i+=1
+            # if i%20==0:
+            #     print(f"Worker {worker_id} processed {len(worker_dataset)} samples")
+            # i+=1
             worker_dataset.append(result)
         output_q.put({worker_id: worker_dataset})
-        print(f"Worker {worker_id} finished")
+        #print(f"Worker {worker_id} finished")
 
     # Multithread version.
     output_q = multiprocessing.Queue()
