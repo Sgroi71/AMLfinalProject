@@ -107,7 +107,7 @@ def main(configs, parser):
         )
         
         if configs.pretrain==True:
-            model.load_state_dict(torch.load(configs.pretrain_model_dir))
+            model.load_state_dict(torch.load(configs.pretrain_model_dir),strict=False)
             print("Pretrained model loaded")
         optimizer, scheduler = build_optimizer_and_scheduler(model, configs=configs)
         # start training
