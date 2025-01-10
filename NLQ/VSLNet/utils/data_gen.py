@@ -371,6 +371,15 @@ def gen_or_load_dataset(configs):
             "test",
             num_workers=configs.num_workers,
         )
+        n_val = 0 if val_set is None else len(val_set)
+        dataset = {
+            "train_set": train_set,
+            "val_set": val_set,
+            "test_set": test_set,
+            "n_train": len(train_set),
+            "n_val": n_val,
+            "n_test": len(test_set),
+        }
         print ("Bert Loaded")
     else:
         word_dict, char_dict, vectors = vocab_emb_gen(data_list, emb_path)
