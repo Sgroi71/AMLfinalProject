@@ -76,6 +76,7 @@ def eval_test(
             total=len(data_loader),
             desc="evaluate {}".format(mode),
         ):
+            print("start eval_test")
             # prepare features
             vfeats, vfeat_lens = vfeats.to(device), vfeat_lens.to(device)
 
@@ -101,7 +102,7 @@ def eval_test(
             start_indices, end_indices = model.extract_index(start_logits, end_logits)
             start_indices = start_indices.cpu().numpy()
             end_indices = end_indices.cpu().numpy()
-            print("start_indices", start_indices)
+            print("start_indices")
             # Record output and use standard evalution script for NLQ.
             for record, starts, ends in zip(records, start_indices, end_indices):
                 # Convert all indices to times.
