@@ -110,6 +110,15 @@ def read_command_line():
         "--period", type=int, default=100, help="training loss print period"
     )
     parser.add_argument(
+        "--pretrain", type=bool, default=False, help="if the model is pretrained"
+    )
+    parser.add_argument(
+        "--pretrain_model_dir",
+        type=str,
+        default="checkpoints",
+        help="path to pretrained model",
+    )
+    parser.add_argument(
         "--text_agnostic",
         dest="text_agnostic",
         action="store_true",
