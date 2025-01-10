@@ -101,7 +101,7 @@ def eval_test(
             start_indices, end_indices = model.extract_index(start_logits, end_logits)
             start_indices = start_indices.cpu().numpy()
             end_indices = end_indices.cpu().numpy()
-
+            print("start_indices", start_indices)
             # Record output and use standard evalution script for NLQ.
             for record, starts, ends in zip(records, start_indices, end_indices):
                 # Convert all indices to times.
@@ -118,7 +118,7 @@ def eval_test(
                     "predicted_times": copy.deepcopy(timewindow_predictions),
                 }
                 predictions.append(new_datum)
-
+            print("end pred")
     # Save predictions if path is provided.
     if result_save_path:
         with open(result_save_path, "w") as file_id:
