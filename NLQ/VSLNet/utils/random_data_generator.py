@@ -105,3 +105,57 @@ if __name__ == "__main__":
     random_data = generate_random_data(filtered_narration, clips_by_video, Nvid, Nnar, NConsecutivenar)
     with open("random_data.json", "w") as f:
         json.dump(random_data, f, indent=4)
+
+'''
+# Save random_data into file and save path
+# Convert the dictionary into a list of items (key-value pairs)
+random_data = json.load(open("/content/AMLfinalProject/NLQ/VSLNet/jsons/random_data.json"))
+items = list(random_data.items())
+
+# Find the midpoint
+mid = len(items) // 2
+
+# Split the items into two halves
+random_data1 = dict(items[:mid])
+random_data2 = dict(items[mid:])
+
+with open('/content/ego4d_data/v1/annotations/random_data1.json', 'w') as f:
+    json.dump(random_data1, f, indent=4)
+with open('/content/ego4d_data/v1/annotations/random_data2.json', 'w') as f:
+    json.dump(random_data1, f, indent=4)
+
+%%bash
+
+source vars.sh
+cd AMLfinalProject/NLQ/VSLNet
+python llama_oracle.py \
+    --narration_filename /content/AMLfinalProject/NLQ/VSLNet/jsons/random_data2.json \
+    --output_dir /content/AMLfinalProject/NLQ/VSLNet/jsons/output_data2.json
+
+import json
+
+with open("/content/AMLfinalProject/NLQ/VSLNet/jsons/output_data1.json", "r") as f1:
+    data1 = json.load(f1)
+
+with open("/content/AMLfinalProject/NLQ/VSLNet/jsons/output_data2.json", "r") as f2:
+    data2 = json.load(f2)
+
+merged_data = {**data1, **data2}
+
+with open("/content/AMLfinalProject/NLQ/VSLNet/jsons/output_data.json", "w") as f_out:
+    json.dump(merged_data, f_out, indent=4)
+
+%%bash
+
+cd AMLfinalProject/NLQ/VSLNet/utils
+python preprocess_generated_data.py \
+    --input_dir /content/AMLfinalProject/NLQ/VSLNet/jsons/output_data.json \
+    --output_dir /content/AMLfinalProject/NLQ/VSLNet/jsons/preprocessed_generated_data.json
+
+%%bash
+
+cd AMLfinalProject/NLQ/VSLNet/utils
+python format_llama_results.py \
+    --llama_results_path /content/AMLfinalProject/NLQ/VSLNet/jsons/preprocessed_generated_data.json \
+    --output_dir /content/AMLfinalProject/NLQ/VSLNet/jsons/
+'''
