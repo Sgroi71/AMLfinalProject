@@ -250,5 +250,11 @@ def read_command_line():
         default="egovlp", 
         help="Feature type to use (e.g., egovlp or other)",
     )
+    parser.add_argument(
+        "--feature_dir",
+        type=str,
+        default="/content/ego4d_data/v1/features", 
+        help="feature directory",
+    )
     configs = parser.parse_args()
     return configs, parser

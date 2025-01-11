@@ -34,9 +34,9 @@ def load_omnivore_features(omnivore_features_path):
 
     return omnivore_features
 
-def generate_random_data(filtered_narration, clips_by_video,Nnar, NConsecutivenar,features):
+def generate_random_data(filtered_narration, clips_by_video,Nnar, NConsecutivenar,features,omnivore_features_path):
     if features == "omnivore":
-        omnivore_features = load_omnivore_features("/home/alexhax/aml/ego4d_data/v1/omnivore_video_swinl_fp16/")
+        omnivore_features = load_omnivore_features(omnivore_features_path)
     result = {}
 
     # Select Nvid random videos
@@ -132,7 +132,7 @@ if __name__ == "__main__":
     else:
         filtered_narration = {uid: entry for uid, entry in narration_data.items() if uid not in exclude_uids}
     
-    random_data = generate_random_data(filtered_narration, clips_by_video,Nnar, NConsecutivenar,configs.features)
+    random_data = generate_random_data(filtered_narration, clips_by_video,Nnar, NConsecutivenar,configs.features,configs.feature_dir)
     llama_output=interact_with_llama(random_data)
     filtered_data=remove_videos_with_no_questions_or_answers(llama_output)
     # the following function will save the data in the output_dir
