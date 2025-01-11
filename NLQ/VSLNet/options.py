@@ -250,11 +250,5 @@ def read_command_line():
         default="egovlp", 
         help="Feature type to use (e.g., egovlp or other)",
     )
-    parser.add_argument(
-        "--output_dir",
-        type=str,
-        default="/content/AMLfinalProject/NLQ/VSLNet/jsons/output_data.json",
-        help="Path to the output JSON file",
-    )
     configs = parser.parse_args()
     return configs, parser
