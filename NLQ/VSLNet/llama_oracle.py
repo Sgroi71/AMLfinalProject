@@ -72,11 +72,7 @@ def ask_llama(
 
     return tokenizer.decode(outputs[0], skip_special_tokens=True).strip()
 
-if __name__ == "__main__":
-    parser = argparse.ArgumentParser()
-    parser.add_argument("--narration_filename", type=str, required=True, help="Path to the narration JSON file")
-    parser.add_argument("--output_dir", type=str, required=True, help="Path to save the output JSON file")
-    args = parser.parse_args()
+def interact_with_llama(narrations):
     start_time = time.time()
 
     login(token="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")
@@ -146,10 +142,6 @@ if __name__ == "__main__":
         ---
         Now, it's your turn! Generate a set of simple queries based on the following narrations:
         """
-    narration_filename = args.narration_filename
-    #read the json file as a dictionary
-    with open(narration_filename) as f:
-        narrations = json.load(f)
     results = {}
     i=1
     for video_uid, video in tqdm(narrations.items()):
@@ -181,8 +173,7 @@ if __name__ == "__main__":
             narrationobject["questions"]=narrares
             objectres.append(narrationobject)
         results[video_uid]=objectres
-    with open(args.output_dir, 'w') as f:
-        json.dump(results, f, indent=4)
+    return results
             
         
     

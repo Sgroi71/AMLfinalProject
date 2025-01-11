@@ -220,5 +220,41 @@ def read_command_line():
         default=None,
         help="A list of splits to remove empty queries from. Valid values for the list are: ['train', 'val']",  # noqa
     )
+    parser.add_argument(
+        "--narration_data",
+        type=str,
+        default="/content/ego4d_data/v1/annotations/narration.json",
+        help="Path to the narration data JSON file",
+    )
+    parser.add_argument(
+        "--nlq_train",
+        type=str,
+        default="/content/ego4d_data/v1/annotations/nlq_train.json",
+        help="Path to the NLQ train annotations JSON file",
+    )
+    parser.add_argument(
+        "--nlq_val",
+        type=str,
+        default="/content/ego4d_data/v1/annotations/nlq_val.json",
+        help="Path to the NLQ validation annotations JSON file",
+    )
+    parser.add_argument(
+        "--nlq_test",
+        type=str,
+        default="/content/ego4d_data/v1/annotations/nlq_test.json",
+        help="Path to the NLQ test annotations JSON file",
+    )
+    parser.add_argument(
+        "--features",
+        type=str,
+        default="egovlp", 
+        help="Feature type to use (e.g., egovlp or other)",
+    )
+    parser.add_argument(
+        "--output_dir",
+        type=str,
+        default="/content/AMLfinalProject/NLQ/VSLNet/jsons/output_data.json",
+        help="Path to the output JSON file",
+    )
     configs = parser.parse_args()
     return configs, parser

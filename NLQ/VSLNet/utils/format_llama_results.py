@@ -102,18 +102,3 @@ def format_llama_results_for_vslnet(llama_results, output_dir, split_ratios=(0.7
             json.dump(split_data, f, indent=4)
     
     print(f"Formatted data saved to {output_dir}")
-
-
-def main(args):
-    with open(args.llama_results_path, "r") as file:
-        llama_results = json.load(file)
-
-    format_llama_results_for_vslnet(llama_results, args.output_dir)
-
-if __name__ == "__main__":
-    parser = argparse.ArgumentParser(description="Format the results for the VSLNet.")
-    parser.add_argument("--llama_results_path", help="Path to LLaMA-generated results")
-    parser.add_argument("--output_dir", help="Output directory for formatted JSON files")
-
-    args = parser.parse_args()
-    main(args)

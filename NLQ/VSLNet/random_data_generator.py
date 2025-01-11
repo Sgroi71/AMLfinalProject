@@ -1,10 +1,12 @@
 import random
 import json
 import os
-
+import options
 import torch
+from llama_oracle import interact_with_llama
+from utils.preprocess_generated_data import remove_videos_with_no_questions_or_answers
+from utils.format_llama_results import format_llama_results_for_vslnet
 
-Nvid = 1700  # Number of videos to select
 Nnar = 3  # Number of narrations to select per video
 NConsecutivenar = 5  # Number of consecutive narrations to include
 
@@ -32,15 +34,17 @@ def load_omnivore_features(omnivore_features_path):
 
     return omnivore_features
 
-def generate_random_data(filtered_narration, clips_by_video, Nvid, Nnar, NConsecutivenar):
-    omnivore_features = load_omnivore_features("/home/alexhax/aml/ego4d_data/v1/omnivore_video_swinl_fp16/")
+def generate_random_data(filtered_narration, clips_by_video,Nnar, NConsecutivenar,features):
+    if features == "omnivore":
+        omnivore_features = load_omnivore_features("/home/alexhax/aml/ego4d_data/v1/omnivore_video_swinl_fp16/")
     result = {}
 
     # Select Nvid random videos
-    video_keys = random.sample(list(filtered_narration.keys()), min(Nvid, len(filtered_narration)))
+    video_keys = filtered_narration.keys()
 
     for video_key in video_keys:
-        if video_key not in clips_by_video and video_key not in omnivore_features:
+        
+        if video_key not in clips_by_video or (features == "omnivore" and video_key not in omnivore_features):
             continue  # Skip videos without corresponding clips
 
         video_data = filtered_narration[video_key]
@@ -110,72 +114,27 @@ def generate_random_data(filtered_narration, clips_by_video, Nvid, Nnar, NConsec
 
 # Example usage
 if __name__ == "__main__":
-    narration_data = json.load(open("/home/alexhax/aml/ego4d_data/v1/annotations/narration.json"))
-    nlq_train = json.load(open("/home/alexhax/aml/ego4d_data/v1/annotations/nlq_train.json"))
-    nlq_val = json.load(open("/home/alexhax/aml/ego4d_data/v1/annotations/nlq_val.json"))
-    nlq_test = json.load(open("/home/alexhax/aml/ego4d_data/v1/annotations/nlq_test_unannotated.json"))
-    clips_by_video = load_clips_dict("/home/alexhax/aml/ego4d_data/clips_dict.json")
+    configs, parser = options.read_command_line()
+    
+    narration_data = json.load(open(configs.narration_data))
+    nlq_train = json.load(open(configs.nlq_train))
+    nlq_val = json.load(open(configs.nlq_val))
+    nlq_test = json.load(open(configs.nlq_test))
+    clips_by_video = load_clips_dict("/content/AMLfinalProject/NLQ/VSLNet/jsons/clips_dict.json")
 
     train_video_uids = {video['video_uid'] for video in nlq_train['videos']}
     val_video_uids = {video['video_uid'] for video in nlq_val['videos']}
     test_video_uids = {video['video_uid'] for video in nlq_test['videos']}
     
     exclude_uids = train_video_uids | val_video_uids | test_video_uids
-    filtered_narration = {uid: entry for uid, entry in narration_data.items() if uid not in exclude_uids}
+    if configs.features == "omnivore":
+        filtered_narration=narration_data
+    else:
+        filtered_narration = {uid: entry for uid, entry in narration_data.items() if uid not in exclude_uids}
     
-    random_data = generate_random_data(filtered_narration, clips_by_video, Nvid, Nnar, NConsecutivenar)
-    with open("random_data.json", "w") as f:
-        json.dump(random_data, f, indent=4)
+    random_data = generate_random_data(filtered_narration, clips_by_video,Nnar, NConsecutivenar,configs.features)
+    llama_output=interact_with_llama(random_data)
+    filtered_data=remove_videos_with_no_questions_or_answers(llama_output)
+    # the following function will save the data in the output_dir
+    format_llama_results_for_vslnet(filtered_data, configs.output_dir)
 
-'''
-# Save random_data into file and save path
-# Convert the dictionary into a list of items (key-value pairs)
-random_data = json.load(open("/content/AMLfinalProject/NLQ/VSLNet/jsons/random_data.json"))
-items = list(random_data.items())
-
-# Find the midpoint
-mid = len(items) // 2
-
-# Split the items into two halves
-random_data1 = dict(items[:mid])
-random_data2 = dict(items[mid:])
-
-with open('/content/ego4d_data/v1/annotations/random_data1.json', 'w') as f:
-    json.dump(random_data1, f, indent=4)
-with open('/content/ego4d_data/v1/annotations/random_data2.json', 'w') as f:
-    json.dump(random_data1, f, indent=4)
-
-%%bash
-
-source vars.sh
-python AMLfinalProject/NLQ/VSLNet/llama_oracle.py \
-    --narration_filename /content/AMLfinalProject/NLQ/VSLNet/jsons/random_data2.json \
-    --output_dir /content/AMLfinalProject/NLQ/VSLNet/jsons/output_data2.json
-
-import json
-
-with open("/content/AMLfinalProject/NLQ/VSLNet/jsons/output_data1.json", "r") as f1:
-    data1 = json.load(f1)
-
-with open("/content/AMLfinalProject/NLQ/VSLNet/jsons/output_data2.json", "r") as f2:
-    data2 = json.load(f2)
-
-merged_data = {**data1, **data2}
-
-with open("/content/AMLfinalProject/NLQ/VSLNet/jsons/output_data.json", "w") as f_out:
-    json.dump(merged_data, f_out, indent=4)
-
-%%bash
-
-cd AMLfinalProject/NLQ/VSLNet/utils
-python preprocess_generated_data.py \
-    --input_dir /content/AMLfinalProject/NLQ/VSLNet/jsons/output_data.json \
-    --output_dir /content/AMLfinalProject/NLQ/VSLNet/jsons/preprocessed_generated_data.json
-
-%%bash
-
-cd AMLfinalProject/NLQ/VSLNet/utils
-python format_llama_results.py \
-    --llama_results_path /content/AMLfinalProject/NLQ/VSLNet/jsons/preprocessed_generated_data.json \
-    --output_dir /content/AMLfinalProject/NLQ/VSLNet/jsons/
-'''
