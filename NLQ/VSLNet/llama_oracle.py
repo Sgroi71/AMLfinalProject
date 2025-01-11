@@ -1,7 +1,7 @@
+import argparse
 from transformers import AutoTokenizer, AutoModelForCausalLM
 from huggingface_hub import login
 import torch
-import options
 import json
 import time
 from tqdm import tqdm
@@ -73,13 +73,15 @@ def ask_llama(
     return tokenizer.decode(outputs[0], skip_special_tokens=True).strip()
 
 if __name__ == "__main__":
-
-    
+    parser = argparse.ArgumentParser()
+    parser.add_argument("--narration_filename", type=str, required=True, help="Path to the narration JSON file")
+    parser.add_argument("--output_dir", type=str, required=True, help="Path to save the output JSON file")
+    args = parser.parse_args()
     start_time = time.time()
 
-    login(token="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")
+    login(token="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")
+
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
-    configs, parser = options.read_command_line()
     model_id = "meta-llama/Llama-3.2-3B"
     model = AutoModelForCausalLM.from_pretrained(model_id, torch_dtype=torch.float16, device_map="auto")
     tokenizer = AutoTokenizer.from_pretrained(model_id)
@@ -144,7 +146,7 @@ if __name__ == "__main__":
         ---
         Now, it's your turn! Generate a set of simple queries based on the following narrations:
         """
-    narration_filename = configs.narration_filename
+    narration_filename = args.narration_filename
     #read the json file as a dictionary
     with open(narration_filename) as f:
         narrations = json.load(f)
@@ -155,8 +157,10 @@ if __name__ == "__main__":
         for narrationblock in video:
             narrares=[]
             narrationobject = {
-                "start_sec":narrationblock["start_sec"],
-                "end_sec":narrationblock["end_sec"],
+                "video_start_sec": narrationblock["video_start_sec"],
+                "video_end_sec": narrationblock["video_end_sec"],
+                "query_start_sec": narrationblock["query_start_sec"],
+                "query_end_sec": narrationblock["query_end_sec"],
                 "clip_uid":narrationblock["clip_uid"],
                 "video_start_frame": narrationblock["video_start_frame"],
                 "video_end_frame": narrationblock["video_end_frame"],
@@ -177,7 +181,7 @@ if __name__ == "__main__":
             narrationobject["questions"]=narrares
             objectres.append(narrationobject)
         results[video_uid]=objectres
-    with open(configs.output_dir, 'w') as f:
+    with open(args.output_dir, 'w') as f:
         json.dump(results, f, indent=4)
             
         
