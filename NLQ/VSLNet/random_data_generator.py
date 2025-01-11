@@ -30,8 +30,7 @@ def load_omnivore_features(omnivore_features_path):
     for filename in os.listdir(omnivore_features_path):
         if filename.endswith(".pt"):
             video_uid = filename.split(".")[0]
-            omnivore_features[video_uid] = torch.load(os.path.join(omnivore_features_path, filename))
-
+            omnivore_features[video_uid] = ""
     return omnivore_features
 
 def generate_random_data(filtered_narration, clips_by_video,Nnar, NConsecutivenar,features,omnivore_features_path):
