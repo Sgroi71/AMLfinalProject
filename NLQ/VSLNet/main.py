@@ -106,8 +106,16 @@ def main(configs, parser):
             save_pretty=True,
         )
         
-        if configs.pretrain==True:
-            model.load_state_dict(torch.load(configs.pretrain_model_dir),strict=False)
+        if configs.pretrain:
+            state_dict = torch.load(configs.pretrain_model_dir)
+            model_state_dict = model.state_dict()
+            # Rimuovi il parametro embedding_net.weight
+            if 'embedding_net.weight' in state_dict and state_dict['embedding_net.weight'].shape != model_state_dict['embedding_net.weight'].shape:
+                del state_dict['embedding_net.weight']
+                print("Removed embedding_net.weight from state_dict")
+
+            # Carica il state_dict modificato
+            model.load_state_dict(state_dict, strict=False)
             print("Pretrained model loaded")
         optimizer, scheduler = build_optimizer_and_scheduler(model, configs=configs)
         # start training
