@@ -7,6 +7,7 @@ This repository contains the implementation of AML final project, which addresse
 The core workflow is presented in a Google Colab notebook for ease of use and reproducibility. You can access it [here](https://colab.research.google.com/drive/1_d9-IKHrs8dwXlaRAZOznhUVYrj3-jH-?usp=sharing).
 
 Baseline github repository: [here](https://github.com/EGO4D/episodic-memory/tree/main/NLQ/VSLNet)
+
 ---
 
 ## Contributors 
