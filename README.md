@@ -1,11 +1,12 @@
 # Natural Language Queries in Egocentric Videos  
-*Pretrain on LLM-Based Generated Queries*
+*Advanced Machine Learning Final Project - Politecnico di Torino 2025*
 
 ## Overview  
 This repository contains the implementation of AML final project, which addresses the challenge of answering natural language queries (NLQs) in egocentric videos. By leveraging large language models (LLMs) to generate synthetic NLQs from video narrations, we propose a novel two-step training pipeline that improves query understanding and localization performance.  
 
 The core workflow is presented in a Google Colab notebook for ease of use and reproducibility. You can access it [here](https://colab.research.google.com/drive/1_d9-IKHrs8dwXlaRAZOznhUVYrj3-jH-?usp=sharing).
 
+Baseline github repository: [here](https://github.com/EGO4D/episodic-memory/tree/main/NLQ/VSLNet)
 ---
 
 ## Contributors 
